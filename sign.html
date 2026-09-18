@@ -1,0 +1,147 @@
+<!doctype html>
+<!-- Static signing page for Thinking With… authors.
+     The unsigned event rides in the URL fragment (#), which browsers never
+     send to the server. Signing happens locally in this page: either via a
+     NIP-07 browser extension (window.nostr) or by pasting an nsec, which is
+     used in-memory only and never transmitted anywhere. -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sign your essay</title>
+<style>
+  body { font-family: Georgia, serif; max-width: 40rem; margin: 3rem auto; padding: 0 1rem; line-height: 1.6; }
+  pre { background: #f4f1ec; padding: 1rem; overflow-x: auto; font-size: .85rem; white-space: pre-wrap; word-break: break-all; }
+  button { font-size: 1rem; padding: .6rem 1.4rem; cursor: pointer; }
+  input { width: 100%; padding: .5rem; box-sizing: border-box; font-family: monospace; }
+  .hide { display: none; }
+  small { color: #666; }
+</style>
+<script type="module">
+const $ = (id) => document.getElementById(id)
+let unsigned = null
+
+// preview shows the full essay - you should read what you sign
+import { generateSecretKey, getPublicKey, finalizeEvent, nip19, BunkerSigner, parseBunkerInput, createNostrConnectURI } from './vendor/nostr-tools.js'
+
+async function load() {
+  // essay source: #fragment (full JSON) or ?essay=<name> -> /essays/<name>.json on this site
+  const name = new URLSearchParams(location.search).get('essay')
+  if (!location.hash && !name) { $('nolink').classList.remove('hide'); return }
+  try {
+    unsigned = name
+      ? await (await fetch(`essays/${encodeURIComponent(name)}.json`)).json()
+      : JSON.parse(decodeURIComponent(location.hash.slice(1)))
+  } catch { $('badlink').classList.remove('hide'); return }
+  $('preview').textContent =
+    `Title: ${unsigned.tags.find(([k]) => k === 'title')?.[1] ?? '(untitled)'}\n\n` +
+    unsigned.content
+}
+
+async function signWithExtension() {
+  const { id, sig, pubkey } = await window.nostr.signEvent(unsigned)
+  return { ...unsigned, id, sig, pubkey }
+}
+
+async function signWithNsec() {
+  const sk = nip19.decode($('nsec').value.trim()).data
+  const signed = finalizeEvent(unsigned, sk)
+  $('nsec').value = '' // wipe from the DOM immediately
+  return signed
+}
+
+async function signWithBunker() {
+  const bp = await parseBunkerInput($('bunker').value.trim())
+  if (!bp) throw new Error('could not read that bunker string')
+  const signer = BunkerSigner.fromBunker(generateSecretKey(), bp)
+  // Clave-style bunkers require a fresh connect handshake (secret is single-use)
+  await signer.connect({ name: 'Thinking With' })
+  try {
+    return await signer.signEvent(unsigned)
+  } finally { signer.close?.() }
+}
+
+function randomHex(n) {
+  const b = new Uint8Array(n); crypto.getRandomValues(b)
+  return Array.from(b, (x) => x.toString(16).padStart(2, '0')).join('')
+}
+
+async function connectAndSign() {
+  const sk = generateSecretKey()
+  const relay = $('relay').value.trim()
+  const uri = createNostrConnectURI({
+    clientPubkey: getPublicKey(sk),
+    relays: relay ? [relay] : ['wss://relay.damus.io'],
+    secret: randomHex(16),
+    name: 'Thinking With'
+  })
+  $('connectUri').textContent = uri
+  $('connectStep2').classList.remove('hide')
+  $('err').textContent = 'Waiting for approval in your signer app…'
+  const signer = await BunkerSigner.fromURI(sk, uri)
+  return await signer.signEvent(unsigned)
+}
+
+async function sign(ev) {
+  $('result').textContent = JSON.stringify(ev, null, 2)
+  $('done').classList.remove('hide')
+  $('copy').classList.remove('hide')
+  history.replaceState(null, '', location.pathname) // drop the fragment
+}
+
+$('extBtn').onclick = async () => {
+  if (!window.nostr) { $('noext').classList.remove('hide'); $('fallback').classList.remove('hide'); return }
+  try { await sign(await signWithExtension()) } catch (e) { $('err').textContent = String(e) }
+}
+$('nsecBtn').onclick = async () => {
+  try { await sign(await signWithNsec()) } catch (e) { $('err').textContent = 'Could not read that key: ' + e }
+}
+$('connectBtn').onclick = async () => {
+  try { await sign(await connectAndSign()) } catch (e) { $('err').textContent = 'Connect: ' + (e.message || e) }
+}
+$('copyUri').onclick = () => navigator.clipboard.writeText($('connectUri').textContent)
+$('bunkerBtn').onclick = async () => {
+  try { await sign(await signWithBunker()) } catch (e) { $('err').textContent = 'Bunker: ' + (e.message || e) }
+}
+$('copy').onclick = () => navigator.clipboard.writeText($('result').textContent)
+
+load()
+</script>
+</head>
+<body>
+<h1>Sign your essay</h1>
+<p id="nolink" class="hide">No essay loaded. Use the link your editor sent you.</p>
+<p id="badlink" class="hide">The link looks broken. Ask your editor for a fresh one.</p>
+
+<div id="main">
+  <h2>You are signing:</h2>
+  <pre id="preview"></pre>
+  <p><small>Signing is free and proves the essay is yours. Your key never leaves this page.</small></p>
+
+  <button id="extBtn">Sign</button>
+  <p><small>Nostr browser extension (Alby, nos2x, or the Buzz portal) will ask you to confirm.</small></p>
+
+  <div id="fallback" class="hide">
+    <p><strong>Or sign with a signer app</strong> (Clave, nsecBunker, etc.). Tap connect, copy the link it shows, and paste it into your signer app's connect field. Approve there.</p>
+    <input id="relay" placeholder="relay (optional) e.g. wss://relay.damus.io">
+    <button id="connectBtn">Connect a signer app</button>
+    <pre id="connectUri" class="hide"></pre>
+    <button id="copyUri" class="hide">Copy connect link</button>
+    <p id="connectStep2" class="hide"><small>Paste the link above into your signer app (Clave → connect client), then approve the signing request.</small></p>
+    <p><strong>Or paste a bunker string</strong> if your signer gave you one (starts with <code>bunker://</code>):</p>
+    <input id="bunker" placeholder="bunker://…">
+    <button id="bunkerBtn">Sign with bunker string</button>
+    <p><strong>Or paste your key</strong> (starts with <code>nsec1</code>). It is used only in this tab, never sent anywhere, and cleared after signing.</p>
+    <input id="nsec" type="password" placeholder="nsec1…">
+    <button id="nsecBtn">Sign with pasted key</button>
+  </div>
+
+  <p id="noext" class="hide"><small>No nostr extension found — use the key option below.</small></p>
+  <p id="err" style="color:#a00"></p>
+
+  <h2 id="done" class="hide">Signed! Copy this and send it back:</h2>
+  <pre id="result"></pre>
+  <button id="copy" class="hide">Copy signed event</button>
+</div>
+</body>
+</html>

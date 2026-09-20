@@ -1,0 +1,47 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900">
+  <!-- Abstract cover for "Owning the Words": signed text as a wax seal on loose sheets -->
+  <defs>
+    <linearGradient id="paper" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#f3ecdd"/>
+      <stop offset="1" stop-color="#e6dcc6"/>
+    </linearGradient>
+    <radialGradient id="wax" cx="0.35" cy="0.3" r="0.9">
+      <stop offset="0" stop-color="#a8322a"/>
+      <stop offset="0.7" stop-color="#8c2620"/>
+      <stop offset="1" stop-color="#6e1c17"/>
+    </radialGradient>
+  </defs>
+  <rect width="1600" height="900" fill="url(#paper)"/>
+  <!-- loose sheets -->
+  <g fill="#fbf7ec" stroke="#c9bda0" stroke-width="2">
+    <rect x="180" y="160" width="560" height="640" rx="6" transform="rotate(-4 460 480)"/>
+    <rect x="260" y="130" width="560" height="640" rx="6" transform="rotate(2 540 450)"/>
+    <rect x="340" y="120" width="560" height="640" rx="6" transform="rotate(-1 620 440)"/>
+  </g>
+  <!-- ghost lines of text on the top sheet -->
+  <g stroke="#b7ab8d" stroke-width="6" stroke-linecap="round" opacity="0.55">
+    <path d="M400 250 h380"/><path d="M400 300 h340"/><path d="M400 350 h400"/>
+    <path d="M400 400 h300"/><path d="M400 450 h380"/><path d="M400 500 h260"/>
+    <path d="M400 550 h350"/><path d="M400 600 h310"/>
+  </g>
+  <!-- drifting letters: the words travel -->
+  <g fill="#8a7d5e" font-family="Georgia, serif" font-size="64" opacity="0.5">
+    <text x="1050" y="220" transform="rotate(-12 1050 220)">w</text>
+    <text x="1180" y="330" transform="rotate(9 1180 330)">o</text>
+    <text x="1300" y="250" transform="rotate(-6 1300 250)">r</text>
+    <text x="1240" y="470" transform="rotate(14 1240 470)">d</text>
+    <text x="1120" y="600" transform="rotate(-9 1120 600)">s</text>
+    <text x="1330" y="640" transform="rotate(6 1330 640)">.</text>
+    <text x="1450" y="420" transform="rotate(-15 1450 420)">t</text>
+    <text x="900" y="740" transform="rotate(11 900 740)">r</text>
+  </g>
+  <!-- wax seal binding the sheets -->
+  <g transform="translate(880 640)">
+    <circle r="110" fill="url(#wax)"/>
+    <circle r="110" fill="none" stroke="#5f1713" stroke-width="6" opacity="0.6"/>
+    <circle r="78" fill="none" stroke="#f0c9b8" stroke-width="4" opacity="0.65"/>
+    <!-- abstract signature squiggle instead of a readable mark -->
+    <path d="M-52 18 C -30 -34, -8 -34, 6 6 S 40 44, 56 -6"
+          fill="none" stroke="#f0c9b8" stroke-width="10" stroke-linecap="round"/>
+  </g>
+</svg>

@@ -8,7 +8,8 @@
   </defs>
   <rect width="1600" height="900" fill="url(#paper)"/>
   <g font-family="'Caveat', 'Segoe Script', 'Bradley Hand', 'Comic Sans MS', cursive" fill="#22262b">
-    <text x="800" y="150" font-size="56" text-anchor="middle" fill="#8c2620" font-weight="700">9/20/2026</text>
+    <text x="800" y="120" font-size="48" text-anchor="middle" fill="#22262b" opacity="0.75">A daily provocation&#8230;</text>
+    <text x="800" y="210" font-size="56" text-anchor="middle" fill="#8c2620" font-weight="700">9/20/2026</text>
     <g font-size="52" text-anchor="middle">
       <text x="800" y="300">Taking something for granted can also be a wonderful expression</text>
       <text x="800" y="380">of generosity - to feel so comfortable and confident in another</text>

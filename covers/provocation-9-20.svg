@@ -11,11 +11,12 @@
     <text x="800" y="120" font-size="48" text-anchor="middle" fill="#22262b" opacity="0.75">A daily provocation&#8230;</text>
     <text x="800" y="210" font-size="56" text-anchor="middle" fill="#8c2620" font-weight="700">9/20/2026</text>
     <g font-size="52" text-anchor="middle">
-      <text x="800" y="300">Taking something for granted can also be a wonderful expression</text>
-      <text x="800" y="380">of generosity - to feel so comfortable and confident in another</text>
-      <text x="800" y="460">person&#8217;s behavior toward you that you take them for granted</text>
-      <text x="800" y="540">can be a deep compliment</text>
+      <text x="800" y="390">Taking something for granted can also be a wonderful expression</text>
+      <text x="800" y="470">of generosity - to feel so comfortable and confident in another</text>
+      <text x="800" y="550">person&#8217;s behavior toward you that you take them for granted</text>
+      <text x="800" y="630">can be a deep compliment</text>
     </g>
   </g>
-  <path d="M640 640 q160 60 320 0" fill="none" stroke="#8c2620" stroke-width="6" stroke-linecap="round" opacity="0.7"/>
+  <!-- The circle that never closes: an open ellipse, gap at the top -->
+  <path d="M 714 736 A 88 44 0 1 0 886 728" fill="none" stroke="#8c2620" stroke-width="6" stroke-linecap="round" opacity="0.55"/>
 </svg>

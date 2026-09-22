@@ -25,12 +25,17 @@ let unsigned = null
 import { generateSecretKey, getPublicKey, finalizeEvent, nip19, BunkerSigner, parseBunkerInput, createNostrConnectURI } from './vendor/nostr-tools.js'
 
 async function load() {
-  // essay source: #fragment (full JSON) or ?essay=<name> -> /essays/<name>.json on this site
-  const name = new URLSearchParams(location.search).get('essay')
+  // piece source: #fragment (full JSON) or ?essay=<name> / ?provocation=<name>
+  // -> /essays/<name>.json or /provocations/<name>.json on this site
+  const params = new URLSearchParams(location.search)
+  const essay = params.get('essay')
+  const provocation = params.get('provocation')
+  const name = essay ?? provocation
+  const dir = provocation && !essay ? 'provocations' : 'essays'
   if (!location.hash && !name) { $('nolink').classList.remove('hide'); return }
   try {
     unsigned = name
-      ? await (await fetch(`essays/${encodeURIComponent(name)}.json`)).json()
+      ? await (await fetch(`${dir}/${encodeURIComponent(name)}.json`)).json()
       : JSON.parse(decodeURIComponent(location.hash.slice(1)))
   } catch { $('badlink').classList.remove('hide'); return }
   $('preview').textContent =
@@ -109,14 +114,14 @@ load()
 </script>
 </head>
 <body>
-<h1>Sign your essay</h1>
-<p id="nolink" class="hide">No essay loaded. Use the link your editor sent you.</p>
+<h1>Sign your piece</h1>
+<p id="nolink" class="hide">No piece loaded. Use the link your editor sent you.</p>
 <p id="badlink" class="hide">The link looks broken. Ask your editor for a fresh one.</p>
 
 <div id="main">
   <h2>You are signing:</h2>
   <pre id="preview"></pre>
-  <p><small>Signing is free and proves the essay is yours. Your key never leaves this page.</small></p>
+  <p><small>Signing is free and proves the piece is yours. Your key never leaves this page.</small></p>
 
   <button id="extBtn">Sign</button>
   <p><small>Nostr browser extension (Alby, nos2x, or the Buzz portal) will ask you to confirm.</small></p>

@@ -22,6 +22,12 @@
       if (meta) meta.setAttribute('content', colors[t]);
     };
     sync();
+    // click anywhere outside the menu closes it
+    document.addEventListener('click', (e) => {
+      document.querySelectorAll('details.menu[open]').forEach((d) => {
+        if (!d.contains(e.target)) d.removeAttribute('open');
+      });
+    });
     document.querySelectorAll('[data-theme-toggle]').forEach((btn) => {
       btn.addEventListener('click', () => {
         const next = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';

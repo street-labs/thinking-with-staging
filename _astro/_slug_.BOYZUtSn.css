@@ -1,0 +1,19 @@
+.prose { font-size: 1.3rem; line-height: 1.75; }
+  .prose h2 { font-size: 1.7rem; margin-top: 2.4rem; }
+  .prose h3 { font-size: 1.35rem; margin-top: 2rem; }
+  .prose blockquote {
+    margin: 1.8rem 0;
+    padding: 0.6rem 0 0.6rem 1.4rem;
+    border-left: 3px solid var(--accent);
+    color: var(--ink-soft);
+    font-style: italic;
+  }
+  .prose blockquote p:last-child { margin-bottom: 0; }
+  .prose a { color: var(--accent-deep); text-decoration: underline; }
+  .prose code {
+    background: var(--paper-2);
+    padding: 0.1em 0.35em;
+    border-radius: 5px;
+    font-size: 0.9em;
+  }
+  .prose img { border-radius: var(--radius); margin: 1.8rem 0; }.article[data-astro-cid-zgcwdgoy]{padding-block:clamp(2.5rem,6vw,4rem)}.back[data-astro-cid-zgcwdgoy]{font-family:var(--font-body);font-size:0.9rem;color:var(--ink-soft);text-decoration:none;display:inline-block;margin-bottom:1.2rem}.back[data-astro-cid-zgcwdgoy]:hover{color:var(--ink)}.article-head[data-astro-cid-zgcwdgoy]{margin:1.2rem 0 2.2rem}.article-head[data-astro-cid-zgcwdgoy] h1[data-astro-cid-zgcwdgoy]{font-size:clamp(2rem,5vw,3rem)}.article-desc[data-astro-cid-zgcwdgoy]{font-size:1.2rem;color:var(--ink-soft);line-height:1.5}.article-meta[data-astro-cid-zgcwdgoy]{font-size:0.9rem;display:flex;align-items:center;gap:0.6rem}.draft[data-astro-cid-zgcwdgoy]{font-size:0.66rem}.verify-row[data-astro-cid-zgcwdgoy]{margin:1.2rem 0 2rem}.prose-wrap[data-astro-cid-zgcwdgoy]{max-width:54.6rem}.article[data-astro-cid-zgcwdgoy] .hero-card{margin-bottom:8rem}

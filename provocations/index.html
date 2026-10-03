@@ -52,6 +52,7 @@
       const cursor = document.createElement('span');
       cursor.className = 'cursor';
       let userScrolled = false;
+      let lastFollow = 0;
       addEventListener('wheel', () => (userScrolled = true), { passive: true });
       addEventListener('touchmove', () => (userScrolled = true), { passive: true });
 
@@ -101,8 +102,11 @@
             if (skip) { done(); return; }
             node.data = text.slice(0, ++i);
             const b = cursor.getBoundingClientRect();
-            if (!userScrolled && b.bottom > innerHeight - 40)
-              scrollBy(0, b.bottom - innerHeight * 0.85);
+            if (!userScrolled && b.bottom > innerHeight - 40 && performance.now() - lastFollow > 450) {
+              lastFollow = performance.now();
+              // glide the viewport down ahead of the cursor instead of jumping
+              scrollBy({ top: b.bottom - innerHeight * 0.85, behavior: 'smooth' });
+            }
             i < text.length ? setTimeout(tick, ms) : done();
           })();
         });

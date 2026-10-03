@@ -51,10 +51,6 @@
       if (!document.documentElement.classList.contains('typing')) return;
       const cursor = document.createElement('span');
       cursor.className = 'cursor';
-      let userScrolled = false;
-      let lastFollow = 0;
-      addEventListener('wheel', () => (userScrolled = true), { passive: true });
-      addEventListener('touchmove', () => (userScrolled = true), { passive: true });
 
       // Capture then clear each segment while its entry is still hidden.
       const titleEl = document.querySelector('.title');
@@ -68,10 +64,10 @@
       }));
       entries.forEach(({ segs }) => segs.forEach((s) => (s.el.textContent = '')));
 
-      // Show All: restore every segment at once, park the cursor at the end.
+      // Show All / screen-full: stop the performance, restore every segment
+      // at once, park the cursor at the end.
       let skip = false;
-      const btn = document.querySelector('.showall');
-      btn.addEventListener('click', () => {
+      const showEverything = () => {
         if (skip) return;
         skip = true;
         btn.hidden = true;
@@ -84,13 +80,16 @@
         const last = entries[entries.length - 1];
         const lastSeg = last.segs[last.segs.length - 1];
         (lastSeg ? lastSeg.el : titleEl).append(cursor);
-      });
+      };
+      const btn = document.querySelector('.showall');
+      btn.addEventListener('click', showEverything);
 
       // Pause a beat between entries, like the terminal thinking.
       const sleep = (ms) => new Promise((done) => setTimeout(done, ms));
 
-      // Type el's text character by character; follow the writing line with
-      // the scroll only until the reader scrolls on their own.
+      // Type el's text character by character; when the cursor reaches the
+      // bottom of the viewport, the rest of the page just appears (no page
+      // scroll - the moving page nauseated readers, john m 2026-10).
       const type = (el, text, ms) =>
         new Promise((done) => {
           if (skip) { done(); return; }
@@ -102,11 +101,7 @@
             if (skip) { done(); return; }
             node.data = text.slice(0, ++i);
             const b = cursor.getBoundingClientRect();
-            if (!userScrolled && b.bottom > innerHeight - 40 && performance.now() - lastFollow > 450) {
-              lastFollow = performance.now();
-              // glide the viewport down ahead of the cursor instead of jumping
-              scrollBy({ top: b.bottom - innerHeight * 0.85, behavior: 'smooth' });
-            }
+            if (b.bottom > innerHeight - 40) { showEverything(); done(); return; }
             i < text.length ? setTimeout(tick, ms) : done();
           })();
         });

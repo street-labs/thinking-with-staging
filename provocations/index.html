@@ -119,7 +119,7 @@
           el.style.visibility = 'visible';
           for (const seg of segs) {
             if (skip) break;
-            await type(seg.el, seg.text, 10);
+            await type(seg.el, seg.text, 25);
           }
           if (el !== entries[entries.length - 1].el && !skip) await sleep(1000);
         }

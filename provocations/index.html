@@ -87,9 +87,12 @@
       // Pause a beat between entries, like the terminal thinking.
       const sleep = (ms) => new Promise((done) => setTimeout(done, ms));
 
-      // Type el's text character by character; when the cursor reaches the
-      // bottom of the viewport, the rest of the page just appears (no page
-      // scroll - the moving page nauseated readers, john m 2026-10).
+      // Type el's text character by character. The whole page types out
+      // (bfda85c7, 2026-10): no auto-scroll and no first-screen cutoff - the
+      // machine keeps writing below the fold; scroll whenever you like (the
+      // moving page nauseated readers, john m 2026-10, so it never moves).
+      // Rhythm: quick jittered characters, pondering pauses after sentences
+      // and occasionally mid-thought - the computer thinking about the line.
       const type = (el, text, ms) =>
         new Promise((done) => {
           if (skip) { done(); return; }
@@ -100,9 +103,13 @@
           (function tick() {
             if (skip) { done(); return; }
             node.data = text.slice(0, ++i);
-            const b = cursor.getBoundingClientRect();
-            if (b.bottom > innerHeight - 40) { showEverything(); done(); return; }
-            i < text.length ? setTimeout(tick, ms) : done();
+            if (i >= text.length) { done(); return; }
+            const c = text[i - 1];
+            let d = ms + Math.random() * ms;
+            if ('.!?'.includes(c)) d += 200 + Math.random() * 350;
+            else if (',;:'.includes(c)) d += 50 + Math.random() * 110;
+            else if (Math.random() < 0.03) d += 60 + Math.random() * 160;
+            setTimeout(tick, d);
           })();
         });
 
@@ -114,7 +121,9 @@
           el.style.visibility = 'visible';
           for (const seg of segs) {
             if (skip) break;
-            await type(seg.el, seg.text, 25);
+            await type(seg.el, seg.text, 12);
+            if (seg !== segs[segs.length - 1] && !skip)
+              await sleep(120 + Math.random() * 200);
           }
           if (el !== entries[entries.length - 1].el && !skip) await sleep(1000);
         }

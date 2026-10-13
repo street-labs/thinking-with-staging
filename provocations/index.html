@@ -91,12 +91,13 @@
       // (bfda85c7, 2026-10): no auto-scroll and no first-screen cutoff - the
       // machine keeps writing below the fold; scroll whenever you like (the
       // moving page nauseated readers, john m 2026-10, so it never moves).
-      // Film cadence (bfda85c7, 2026-10): modeled from the Alien clip,
-      // frame-diffed at 30fps - text arrives in bursts of 1-4 characters
-      // every ~60-160ms, the stutter of a serial terminal, and every so
-      // often (the header did this too) a run of characters flushes on
-      // screen all at once. chunkMax scales the burst for big header type.
-      const type = (el, text, chunkMax = 4) =>
+      // Read-aloud prosody (bfda85c7, 2026-10): every delay is derived from
+      // the text being typed, so each provocation lands at roughly the pace
+      // it would be spoken - letters flow inside words, breaths between
+      // words, longer at commas/colons, a settling pause at periods, a punch
+      // at exclamations, questions hang, and the reader leans in before a
+      // SHOUTED word, slowing through it. ms = in-word letter delay.
+      const type = (el, text, ms) =>
         new Promise((done) => {
           if (skip) { done(); return; }
           el.textContent = '';
@@ -105,33 +106,39 @@
           let i = 0;
           (function tick() {
             if (skip) { done(); return; }
-            let n;
-            if (i > 0 && Math.random() < 0.08) {
-              // phrase flush: a run of characters lands at once
-              const stop = text.slice(i, i + 40).search(/[.!?](\s|$)/);
-              n = stop === -1 ? Math.min(40, text.length - i) : stop + 1;
-            } else {
-              n = 1 + Math.floor(Math.random() * Math.random() * chunkMax);
-            }
-            i = Math.min(text.length, i + n);
-            node.data = text.slice(0, i);
+            node.data = text.slice(0, ++i);
             if (i >= text.length) { done(); return; }
-            const d = n > chunkMax ? 250 + Math.random() * 200 : 60 + Math.random() * 100;
+            const c = text[i - 1];
+            const rest = text.slice(i);
+            let d = ms + Math.random() * ms * 0.4;   // letters flow inside a word
+            if (/\s/.test(c)) d = 90 + Math.random() * 70;   // breath between words
+            if (',;'.includes(c)) d = 300 + Math.random() * 100;  // list breath
+            if (c === ':') d = 380 + Math.random() * 120;
+            if (c === '.') d = 520 + Math.random() * 280;   // declarative: it settles
+            if (c === '!') d = 480 + Math.random() * 220;   // the punch, then on
+            if (c === '?') d = 680 + Math.random() * 320;   // the question hangs
+            if (c === '\u2014' || c === '\u2013') d = 300 + Math.random() * 100;
+            if (c === '\u201c' || c === '\u2018') d = 170 + Math.random() * 80;  // breath before quoting
+            if (c === '\u201d' || c === '\u2019') d = 140 + Math.random() * 60;
+            if (/\s/.test(c) && /^[A-Z]{2,}/.test(rest)) d += 260;   // lean in on a shout
+            else if (/[A-Z]/.test(c) && /^[A-Z]/.test(rest)) d = 58 + Math.random() * 22;  // through the shout
+            if (Math.random() < 0.02) d += 150 + Math.random() * 150;  // a reader's small stumble
+            d *= 0.7;   // brisk pace (bfda85c7, 2026-10): same reading rhythm, ~30% faster
             setTimeout(tick, d);
           })();
         });
 
       (async () => {
         titleEl.style.visibility = 'visible';
-        await type(titleEl, titleText, 6);
+        await type(titleEl, titleText, 60);
         for (const { el, segs } of entries) {
           if (skip) break;
           el.style.visibility = 'visible';
           for (const seg of segs) {
             if (skip) break;
-            await type(seg.el, seg.text);
+            await type(seg.el, seg.text, 22);
             if (seg !== segs[segs.length - 1] && !skip)
-              await sleep(200 + Math.random() * 250);
+              await sleep(150 + Math.random() * 250);
           }
           if (el !== entries[entries.length - 1].el && !skip) await sleep(1000);
         }

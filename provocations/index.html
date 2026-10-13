@@ -91,8 +91,12 @@
       // (bfda85c7, 2026-10): no auto-scroll and no first-screen cutoff - the
       // machine keeps writing below the fold; scroll whenever you like (the
       // moving page nauseated readers, john m 2026-10, so it never moves).
-      // Rhythm: quick jittered characters, pondering pauses after sentences
-      // and occasionally mid-thought - the computer thinking about the line.
+      // Read-aloud prosody (bfda85c7, 2026-10): every delay is derived from
+      // the text being typed, so each provocation lands at roughly the pace
+      // it would be spoken - letters flow inside words, breaths between
+      // words, longer at commas/colons, a settling pause at periods, a punch
+      // at exclamations, questions hang, and the reader leans in before a
+      // SHOUTED word, slowing through it. ms = in-word letter delay.
       const type = (el, text, ms) =>
         new Promise((done) => {
           if (skip) { done(); return; }
@@ -105,10 +109,20 @@
             node.data = text.slice(0, ++i);
             if (i >= text.length) { done(); return; }
             const c = text[i - 1];
-            let d = ms + Math.random() * ms;
-            if ('.!?'.includes(c)) d += 200 + Math.random() * 350;
-            else if (',;:'.includes(c)) d += 50 + Math.random() * 110;
-            else if (Math.random() < 0.03) d += 60 + Math.random() * 160;
+            const rest = text.slice(i);
+            let d = ms + Math.random() * ms * 0.4;   // letters flow inside a word
+            if (/\s/.test(c)) d = 90 + Math.random() * 70;   // breath between words
+            if (',;'.includes(c)) d = 300 + Math.random() * 100;  // list breath
+            if (c === ':') d = 380 + Math.random() * 120;
+            if (c === '.') d = 520 + Math.random() * 280;   // declarative: it settles
+            if (c === '!') d = 480 + Math.random() * 220;   // the punch, then on
+            if (c === '?') d = 680 + Math.random() * 320;   // the question hangs
+            if (c === '\u2014' || c === '\u2013') d = 300 + Math.random() * 100;
+            if (c === '\u201c' || c === '\u2018') d = 170 + Math.random() * 80;  // breath before quoting
+            if (c === '\u201d' || c === '\u2019') d = 140 + Math.random() * 60;
+            if (/\s/.test(c) && /^[A-Z]{2,}/.test(rest)) d += 260;   // lean in on a shout
+            else if (/[A-Z]/.test(c) && /^[A-Z]/.test(rest)) d = 58 + Math.random() * 22;  // through the shout
+            if (Math.random() < 0.02) d += 150 + Math.random() * 150;  // a reader's small stumble
             setTimeout(tick, d);
           })();
         });
@@ -121,9 +135,9 @@
           el.style.visibility = 'visible';
           for (const seg of segs) {
             if (skip) break;
-            await type(seg.el, seg.text, 12);
+            await type(seg.el, seg.text, 22);
             if (seg !== segs[segs.length - 1] && !skip)
-              await sleep(120 + Math.random() * 200);
+              await sleep(200 + Math.random() * 250);
           }
           if (el !== entries[entries.length - 1].el && !skip) await sleep(1000);
         }

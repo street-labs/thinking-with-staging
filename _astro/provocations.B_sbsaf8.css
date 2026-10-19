@@ -55,6 +55,11 @@
   .like:hover { color: var(--ink); }
   .like.on { color: var(--accent-deep); }
   .like:disabled { cursor: default; }
+  /* 4 faces per prov (john m, bf5aab2c, 2026-10): emoji at reading size,
+     count beside it, same quiet chrome as the old Like word. */
+  .reacts { display: flex; gap: 0.6rem; }
+  .react { text-transform: none; letter-spacing: 0; font-size: 0.95rem; }
+  .react .e { font-size: 1.2rem; }
   .rform {
     display: grid;
     gap: 0.5rem;

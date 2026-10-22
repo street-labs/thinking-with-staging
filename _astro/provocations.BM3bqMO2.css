@@ -14,11 +14,13 @@
   .provocation:has(+ .respond) { font-weight: 700; }
   .num {
     display: block;
-    /* site label convention (same as the homepage prov-tagline) */
+    /* john m (bf5aab2c, 2026-10-21): the number sits at the prov text's
+       size now (1.3rem, same as .provocation) - it was born in the small
+       label convention (0.7rem). */
     font-family: var(--font-body);
     font-weight: 700;
     text-transform: uppercase;
-    font-size: 0.7rem;
+    font-size: 1.3rem;
     letter-spacing: 0.14em;
     color: var(--ink-faint);
     margin-bottom: 0.35rem;

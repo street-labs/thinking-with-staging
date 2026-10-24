@@ -69,8 +69,8 @@
   --ink-faint: #5c5c5c;
   --line: #d9d9d9;
   --line-soft: #e6e6e6;
-  --accent: #c6552f;      /* terracotta — master brand accent */
-  --accent-deep: #a23f23;
+  --accent: var(--blood); /* accent = the logo's With… red, one source of truth (nstreet, 2026-10-30) */
+  --accent-deep: var(--blood);
   --accent-ink: #faf6ee;
   --teal: #3f5d63;        /* night-sky teal — secondary accent */
   --teal-deep: #2c4248;
@@ -109,8 +109,8 @@
   --ink-faint: #938b7d;
   --line: #2f343b;
   --line-soft: #272b31;
-  --accent: #e07a52;      /* warmed terracotta for dark */
-  --accent-deep: #ec926e;
+  --accent: var(--blood); /* same red, lifted for dark ground via --blood */
+  --accent-deep: var(--blood);
   --accent-ink: #15171a;
   --teal: #7fa6ad;
   --teal-deep: #9cbcc2;

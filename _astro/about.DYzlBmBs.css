@@ -85,7 +85,7 @@
 
   --shadow-rgb: 0, 0, 0;
   --maxw: 76rem;
-  --maxw-prose: 42rem;
+  --maxw-prose: 54.6rem;  /* reading column, same as the essays (nstreet, 2026-10-29) */
   --radius: 14px;
   --radius-lg: 22px;
   /* downward-angled drop shadow: offset down-right, soft (nstreet) */

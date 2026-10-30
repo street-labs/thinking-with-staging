@@ -1,4 +1,7 @@
-/* ponytail: these rules target elements rendered by the child component
+/* john m (bf5aab2c, 2026-10-30): the wall reads on warm ivory, not web
+     white - scoped to this page so the rest of the site keeps nstreet's
+     white ground. --accent-ink was already this tone (#faf6ee). */
+  :root:not([data-theme='dark']) { --paper: #faf6ee; }/* ponytail: these rules target elements rendered by the child component
      Prov.astro, which carries no page scope id - kept in a global block
      because Astro scoped selectors never match it (found 2026-10-17: the
      front-row refactor silently killed every .provocation rule). */

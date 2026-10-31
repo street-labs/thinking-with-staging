@@ -42,29 +42,42 @@
      the machinery speaks Newsreader like the rest of the site. */
   .respond {
     max-width: 46rem;
-    margin: 0 0 2.6rem;
+    margin: 0 0 2rem;
     padding-top: 0.4rem;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
   }
-  .like {
+  /* Nate (bfda85c7, 2026-10-31): one comment bubble, count to its right -
+     quiet chrome like the rest of the machinery. The thread stays shut
+     until the bubble is clicked. */
+  .ctoggle {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
     background: none;
     border: none;
-    padding: 0;
+    padding: 0.15rem 0;
     font-family: var(--font-body);
-    font-size: 0.7rem;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.14em;
+    font-size: 0.95rem;
     color: var(--ink-faint);
     cursor: pointer;
   }
-  .like:hover { color: var(--ink); }
-  .like.on { color: var(--accent-deep); }
-  .like:disabled { cursor: default; }
-  /* 4 faces per prov (john m, bf5aab2c, 2026-10): emoji at reading size,
-     count beside it, same quiet chrome as the old Like word. */
-  .reacts { display: flex; gap: 0.6rem; }
-  .react { text-transform: none; letter-spacing: 0; font-size: 0.95rem; }
-  .react .e { font-size: 1.2rem; }
+  .ctoggle:hover { color: var(--ink); }
+  .ctoggle[aria-expanded='true'] { color: var(--accent-deep); }
+  .ctoggle:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+  .bubble {
+    width: 1.15rem;
+    height: 1.15rem;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.6;
+    stroke-linejoin: round;
+    stroke-linecap: round;
+  }
+  .cn { font-size: 0.85rem; font-weight: 700; }
+  .cthread { width: 100%; }
+  .cthread[hidden] { display: none; }
   .rform {
     display: grid;
     gap: 0.5rem;

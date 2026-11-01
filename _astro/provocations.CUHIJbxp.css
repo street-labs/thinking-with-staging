@@ -12,22 +12,41 @@
      Prov.astro, which carries no page scope id - kept in a global block
      because Astro scoped selectors never match it (found 2026-10-17: the
      front-row refactor silently killed every .provocation rule). */
-  /* john m (bf5aab2c, 2026-11): the wall goes graffiti - Rubik Spray Paint,
-     already in the project's font set, at the header art's blood red. The
-     number and byline keep the body face so the entries stay scannable. */
   .provocation {
     max-width: 46rem;
     margin: 1.2rem 0;
-    font-family: 'Rubik Spray Paint', var(--font-display);
+    font-family: var(--font-display);
     font-size: 1.3rem;
-    line-height: 1.55;
+    line-height: 1.45;
   }
-  :root:not([data-theme='dark']) .provocation { color: #b00b14; }
-  /* John's bold front row: the spray face ships weight 400 only, so a
-     synthetic bold would just smear the texture - the front row keeps its
-     place by the space around it instead. */
-  .provocation:has(+ .respond) { font-weight: 700; }
-  .provocation:has(+ .respond) .txt { font-weight: 400; }
+  /* john m (bf5aab2c, 2026-11): only the current four go graffiti - Rubik
+     Spray Paint at the header art's blood red, a little spray bleed around
+     the letters, each entry set slightly off the horizontal like it went up
+     in a hurry. The Archive below keeps Fraunces (john m) so the current
+     ones are the only thing shouting. */
+  .provocation:has(+ .respond) {
+    font-family: 'Rubik Spray Paint', var(--font-display);
+    font-size: 1.45rem;
+    line-height: 1.5;
+    color: #b00b14;
+  }
+  .provocation:has(+ .respond) .txt {
+    display: block;
+    padding-top: 0.2rem; /* spray ascenders clear the number above */
+    transform: rotate(-0.4deg);
+    text-shadow:
+      0 0 1px rgba(176, 11, 20, 0.7),
+      0 0 6px rgba(176, 11, 20, 0.28),
+      0 0 16px rgba(176, 11, 20, 0.14);
+  }
+  .provocation:has(+ .respond):nth-of-type(even) .txt { transform: rotate(0.35deg); }
+  /* night: #b00b14 disappears on the dark ground, so the spray lifts to a
+     brighter blood red - same paint, more light */
+  :root[data-theme='dark'] .provocation:has(+ .respond) { color: #ff5a4d; }
+  :root[data-theme='dark'] .provocation:has(+ .respond) .txt {
+    text-shadow: 0 0 1px rgba(255, 90, 77, 0.6), 0 0 10px rgba(255, 90, 77, 0.22);
+  }
+  .provocation:has(+ .respond) .num { color: #b00b14; opacity: 0.55; }
   .num {
     display: block;
     /* john m (bf5aab2c, 2026-10-21): the number sits at the prov text's
@@ -160,4 +179,4 @@
      hides until its cue; the feed is always on screen (john m, 2026-10-16:
      machine animation on the title and picture only) */
   :global(html.typing) .title { visibility: hidden; }
-  :global(html.typing) .subtitle { visibility: hidden; }.page[data-astro-cid-knxm4bh4]{padding-top:clamp(1.75rem,5vw,4rem)}.back[data-astro-cid-knxm4bh4]{display:inline-block;font-family:var(--font-body);font-size:0.9rem;color:var(--ink-soft);text-decoration:none;margin-bottom:1.2rem}.back[data-astro-cid-knxm4bh4]:hover{color:var(--ink)}.title[data-astro-cid-knxm4bh4]{font-size:clamp(2.2rem,6vw,3.4rem);margin:0 0 0.4rem}.subtitle[data-astro-cid-knxm4bh4]{font-family:var(--font-body);font-size:1.1rem;line-height:1.55;color:var(--ink-soft);margin:0 0 1.2rem}:root:not([data-theme="dark"]) .title[data-astro-cid-knxm4bh4]{color:#b00b14}:root[data-theme=dark] .title[data-astro-cid-knxm4bh4]{color:#56ff8a}.figure[data-astro-cid-knxm4bh4]{margin:0 0 1.2rem}.art[data-astro-cid-knxm4bh4],.pix[data-astro-cid-knxm4bh4]{display:block;width:100%;max-width:28rem;height:auto}html.typing .art[data-astro-cid-knxm4bh4]{visibility:hidden}.pix[data-astro-cid-knxm4bh4]{display:none;image-rendering:pixelated}html.typing .pix[data-astro-cid-knxm4bh4]:not([hidden]){display:block}.cols[data-astro-cid-knxm4bh4]{display:flex;flex-direction:column}.panel[data-astro-cid-knxm4bh4]{display:flex;flex-direction:column;align-items:flex-start;gap:1rem}@media (min-width: 960px){.cols[data-astro-cid-knxm4bh4]{display:grid;grid-template-columns:minmax(0,1fr) 28rem;grid-template-rows:auto 1fr;column-gap:3rem;row-gap:0}.head[data-astro-cid-knxm4bh4]{grid-area:1 / 1}.panel[data-astro-cid-knxm4bh4]{grid-area:1 / 2 / 3 / 3;align-self:start;position:sticky;top:max(5.5rem,calc(50vh - 17.6rem))}.feed[data-astro-cid-knxm4bh4]{grid-area:2 / 1}.panel[data-astro-cid-knxm4bh4] .figure[data-astro-cid-knxm4bh4]{margin:0}}.feed[data-astro-cid-knxm4bh4]{display:block}
+  :global(html.typing) .subtitle { visibility: hidden; }.page[data-astro-cid-knxm4bh4]{padding-top:clamp(1.75rem,5vw,4rem)}.back[data-astro-cid-knxm4bh4]{display:inline-block;font-family:var(--font-body);font-size:0.9rem;color:var(--ink-soft);text-decoration:none;margin-bottom:1.2rem}.back[data-astro-cid-knxm4bh4]:hover{color:var(--ink)}.title[data-astro-cid-knxm4bh4]{font-family:"Rubik Spray Paint",var(--font-display);font-size:clamp(2.1rem,5.6vw,3.2rem);margin:0 0 0.4rem;transform:rotate(-0.6deg);transform-origin:left center;text-shadow:0 0 1px currentColor,0 0 10px rgba(0,0,0,0.06)}.subtitle[data-astro-cid-knxm4bh4]{font-family:var(--font-body);font-size:1.1rem;line-height:1.55;color:var(--ink-soft);margin:0 0 1.2rem}:root:not([data-theme="dark"]) .title[data-astro-cid-knxm4bh4]{color:#b00b14}:root[data-theme=dark] .title[data-astro-cid-knxm4bh4]{color:#56ff8a}.figure[data-astro-cid-knxm4bh4]{margin:0 0 1.2rem}.art[data-astro-cid-knxm4bh4],.pix[data-astro-cid-knxm4bh4]{display:block;width:100%;max-width:28rem;height:auto}html.typing .art[data-astro-cid-knxm4bh4]{visibility:hidden}.pix[data-astro-cid-knxm4bh4]{display:none;image-rendering:pixelated}html.typing .pix[data-astro-cid-knxm4bh4]:not([hidden]){display:block}.cols[data-astro-cid-knxm4bh4]{display:flex;flex-direction:column}.panel[data-astro-cid-knxm4bh4]{display:flex;flex-direction:column;align-items:flex-start;gap:1rem}@media (min-width: 960px){.cols[data-astro-cid-knxm4bh4]{display:grid;grid-template-columns:minmax(0,1fr) 28rem;grid-template-rows:auto 1fr;column-gap:3rem;row-gap:0}.head[data-astro-cid-knxm4bh4]{grid-area:1 / 1}.panel[data-astro-cid-knxm4bh4]{grid-area:1 / 2 / 3 / 3;align-self:start;position:sticky;top:max(5.5rem,calc(50vh - 17.6rem))}.feed[data-astro-cid-knxm4bh4]{grid-area:2 / 1}.panel[data-astro-cid-knxm4bh4] .figure[data-astro-cid-knxm4bh4]{margin:0}}.feed[data-astro-cid-knxm4bh4]{display:block}
